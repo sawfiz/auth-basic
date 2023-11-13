@@ -76,7 +76,9 @@ passport.deserializeUser(async (id, done) => {
   };
 });
 
-app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
+// app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
+app.use(session({ secret: process.env.SECRET, resave: false, saveUninitialized: true }));
+console.log("🚀 ~ file: app.js:81 ~ process.env.SECRET:", process.env.SECRET)
 app.use(passport.initialize());
 app.use(passport.session());
 
