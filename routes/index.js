@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
+const bcrypt = require('bcryptjs');
 
 const User = require('../models/user');
 
@@ -16,16 +16,22 @@ router.get('/sign-up', function (req, res, next) {
 });
 
 router.post('/sign-up', async (req, res, next) => {
-  try {
-    const user = new User({
-      username: req.body.username,
-      password: req.body.password,
-    });
-    const result = await user.save();
-    res.redirect('/');
-  } catch (err) {
-    return next(err);
-  }
+  bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
+    if (err) {
+      console.log('Erro hashing password');
+    } else {
+      try {
+        const user = new User({
+          username: req.body.username,
+          password: hashedPassword,
+        });
+        const result = await user.save();
+        res.redirect('/');
+      } catch (err) {
+        return next(err);
+      }
+    }
+  });
 });
 
 // passport.authenticate() is a function.  If to be called directly,
