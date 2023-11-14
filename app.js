@@ -76,12 +76,12 @@ passport.deserializeUser(async (id, done) => {
   };
 });
 
-// app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
-app.use(session({ secret: process.env.SECRET, resave: false, saveUninitialized: true }));
-console.log("🚀 ~ file: app.js:81 ~ process.env.SECRET:", process.env.SECRET)
+// Make sure to add SESSION_SECRET in .env
+app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Make currentUser globally available including the views
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
   next();
